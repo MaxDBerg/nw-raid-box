@@ -1,0 +1,59 @@
+body {
+	display: flex;
+	min-height: 100vh;
+	margin: 0%;
+	box-sizing: border-box;
+	color: darkgray;
+}
+
+#raidBox {
+	position: absolute;
+	background-color: white;
+	border-style: solid;
+	border-color: red;
+	top: calc(100vh / 2);
+	left: calc(100vw / 2);
+	min-height: 100px;
+	min-width: 100px;
+	z-index: 2;
+}
+
+#raidBoxMoveSelector {
+	background-color: blue;
+	z-index: 3;
+	min-height: 20px;
+	cursor: move;
+}
+
+#editModeBlur {
+	top: 0;
+	right: 0;
+	position: absolute;
+	min-height: 100vh;
+	min-width: 100vw;
+	background-color: yellow;
+	opacity: 20%;
+	z-index: 1;
+}
+
+#editModeToggleElement {
+	position: absolute;
+	right: auto;
+	left: 0;
+	background-color: red;
+	border-style: solid;
+	border-color: red;
+	cursor: pointer;
+	width: 36px;
+	height: 36px;
+	z-index: 2;
+}
+
+#editModeToggleElement:hover {
+	border-style: solid;
+	border-color: white;
+}
+
+.not-visible {
+	visibility: hidden;
+}
