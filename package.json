@@ -16,6 +16,7 @@
 		"globals": "^15.9.0"
 	},
 	"dependencies": {
-		"get-windows": "^9.2.0"
+		"get-windows": "^9.2.0",
+		"zeromq": "^6.0.4"
 	}
 }
