@@ -1,14 +1,14 @@
 // Make the DIV element draggable:
-dragElement(document.getElementById("raidBox"));
+dragElement(document.getElementById("raid-container"));
 
 function dragElement(elmnt) {
 	var pos1 = 0,
 		pos2 = 0,
 		pos3 = 0,
 		pos4 = 0;
-	if (document.getElementById(elmnt.id + "MoveSelector")) {
+	if (document.getElementById(elmnt.id + "-selector")) {
 		// if present, the header is where you move the DIV from:
-		document.getElementById(elmnt.id + "MoveSelector").onmousedown = dragMouseDown;
+		document.getElementById(elmnt.id + "-selector").onmousedown = dragMouseDown;
 	} else {
 		// otherwise, move the DIV from anywhere inside the DIV:
 		elmnt.onmousedown = dragMouseDown;

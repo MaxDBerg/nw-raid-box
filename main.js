@@ -6,10 +6,17 @@ import zmq from "zeromq";
 
 let win;
 let gameActive = false;
-const os = process.platform;
+let receivingData = false;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const gameProcessName = "VLC media player"; // macOS/Linux: Process name of the game
-const sock = new zmq.Request();
+const gameProcessName = "NewWorld.exe"; // macOS/Linux: Process name of the game
+let commandSocket = new zmq.Request();
+let dataSocket = new zmq.Pull();
+commandSocket.linger = 0;
+
+commandSocket.connect("tcp://127.0.0.1:5555");
+console.log("Publisher bound to port 5555");
+dataSocket.connect("tcp://127.0.0.1:5556");
+console.log("Receiver bound to port 5556");
 
 const createWindow = () => {
 	const win = new BrowserWindow({
@@ -35,6 +42,7 @@ const createWindow = () => {
 	win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 	win.setAlwaysOnTop(true, "screen-saver", 1);
 	win.setFullScreenable(false);
+	win.setIgnoreMouseEvents(true, { forward: true });
 
 	win.loadFile("./src/index.html");
 	return win;
@@ -43,14 +51,6 @@ const createWindow = () => {
 if (!app.requestSingleInstanceLock()) {
 	app.quit();
 }
-
-app.whenReady().then(() => {
-	sock.connect("tcp://127.0.0.1:5555");
-	console.log("Publisher bound to port 5555");
-	win = createWindow();
-	win.setIgnoreMouseEvents(true, { forward: true });
-	setInterval(checkFocus, 1000);
-});
 
 app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") app.quit();
@@ -61,44 +61,82 @@ ipcMain.on("set-ignore-mouse-events", (event, ignore, options) => {
 	win.setIgnoreMouseEvents(ignore, options);
 });
 
-const checkFocus = async () => {
-	try {
-		const currentWindow = await checkActiveWindow();
-		//console.log(currentWindow);
-		if (currentWindow.owner.name === gameProcessName || currentWindow.owner.name === "Electron") {
-			if (!gameActive) {
-				gameActive = true;
-				win.webContents.send("is-game", true);
-				await handleZMQCommand("start");
-			}
-			console.log("Game is open. Displaying overlay...");
-		} else {
-			if (gameActive) {
-				gameActive = false;
-				win.webContents.send("is-game", false);
-				await handleZMQCommand("stop");
-			}
-			console.log("Game is not open. Hiding overlay...");
-		}
-	} catch (error) {
-		console.error("Error checking game state:", error);
-	}
-};
+app.whenReady().then(() => {
+	win = createWindow();
+	checkGameStatusLoop();
+	dataListeningLoop();
+});
 
-const handleZMQCommand = async (command, retries = 3) => {
-	let attempts = 0;
-	while (attempts < retries) {
+async function checkGameStatusLoop() {
+	setInterval(async () => {
 		try {
-			await sock.send([command]);
-			const result = await receiveWithTimeout(1000);
-			console.log(`Received: ${result}`);
-			return result; // Success, return the result
+			const currentWindow = await checkActiveWindow();
+
+			if (["NewWorld.exe", "VLC media player", "Electron"].includes(currentWindow.owner.name)) {
+				if (!gameActive) {
+					gameActive = true;
+					win.webContents.send("is-game", true);
+					console.log("Game is active. Starting data reception...");
+					await handleZMQCommand(["start"]);
+					receivingData = true;
+				}
+			} else {
+				if (gameActive) {
+					gameActive = false;
+					win.webContents.send("is-game", false);
+					console.log("Game is not active. Stopping data reception...");
+					await handleZMQCommand(["stop"]);
+					receivingData = false;
+				}
+			}
 		} catch (error) {
-			attempts++;
-			console.error(`Attempt ${attempts} failed:`, error);
+			console.log("Something went very wrong!");
+			console.log(error);
 		}
+	}, 1000);
+}
+
+async function dataListeningLoop() {
+	setInterval(async () => {
+		if (receivingData) {
+			try {
+				const [message] = await dataSocket.receive();
+				console.log("Received data from Python:", [...message]);
+
+				win.webContents.send("parser-data", [...message]);
+			} catch (error) {
+				try {
+					dataSocket.close();
+				} catch (closeError) {
+					console.error("Error closing the data socket");
+				}
+
+				dataSocket = new zmq.Pull();
+				dataSocket.connect("tcp://127.0.0.1:5556");
+			}
+		}
+	}, 50);
+}
+
+const handleZMQCommand = async (command) => {
+	try {
+		await commandSocket.send([command]);
+		let result = await receiveWithTimeout(1000);
+		console.log(`Received: ${result}`);
+		return result;
+	} catch (error) {
+		console.error(`Failed to send ZMQ command '${command}'!`);
+
+		try {
+			commandSocket.close();
+		} catch (closeError) {
+			console.error("Error closing the command socket:");
+		}
+
+		commandSocket = new zmq.Request();
+		commandSocket.linger = 0;
+		commandSocket.connect("tcp://127.0.0.1:5555");
 	}
-	console.error(`Failed to send ZMQ command '${command}' after ${retries} attempts`);
 };
 
 const receiveWithTimeout = (timeout) => {
@@ -107,7 +145,8 @@ const receiveWithTimeout = (timeout) => {
 			reject(new Error("ZMQ response timed out"));
 		}, timeout);
 
-		sock.receive()
+		commandSocket
+			.receive()
 			.then((result) => {
 				clearTimeout(timer); // Clear timeout if result is received
 				resolve(result);
@@ -120,7 +159,7 @@ const receiveWithTimeout = (timeout) => {
 };
 
 async function checkActiveWindow() {
-	if (os === "win32") {
+	if (process.platform === "win32") {
 		return await activeWindow();
 	}
 }
