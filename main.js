@@ -101,9 +101,7 @@ async function dataListeningLoop() {
 		if (receivingData) {
 			try {
 				const [message] = await dataSocket.receive();
-				console.log("Received data from Python:", [...message]);
-
-				win.webContents.send("parser-data", [...message]);
+				win.webContents.send("python-data", message);
 			} catch (error) {
 				try {
 					dataSocket.close();

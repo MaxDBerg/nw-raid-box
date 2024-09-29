@@ -2,8 +2,12 @@
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-		<meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="default-src 'self'; script-src 'self'; img-src 'self' data:;" />
+		<meta
+			http-equiv="X-Content-Security-Policy"
+			content="default-src 'self'; script-src 'self'; img-src 'self' data:;" />
 		<title>Hello from Electron renderer!</title>
 		<link href="../index.css" rel="stylesheet" />
 	</head>
@@ -13,45 +17,64 @@
 		<div id="raid-container">
 			<div id="raid-container-selector" class="not-visible"></div>
 			<div class="raid-box" id="player1-box">
-				<div class="player-name">Player 1</div>
+				<div class="player-name" id="player1-name">Bjorn Trond</div>
 				<div class="health-percent" id="player1-percent">0%</div>
-				<div class="health-bar">
-					<div class="health-fill" id="player1-health"></div>
-				</div>
+				<div class="health-overlay" id="player1-health"></div>
+				<img id="health-bar1" class="health-bar" src="" alt="Player 1 Health Bar" />
 			</div>
 
 			<div class="raid-box" id="player2-box">
-				<div class="player-name">Player 2</div>
-				<div class="health-bar">
-					<div class="health-percent" id="player2-percent">0%</div>
-					<div class="health-fill" id="player2-health"></div>
-				</div>
+				<div class="player-name" id="player2-name">keepzao</div>
+				<div class="health-percent" id="player2-percent">0%</div>
+				<div class="health-overlay" id="player2-health"></div>
+				<img id="health-bar2" class="health-bar" src="" alt="Player 2 Health Bar" />
 			</div>
 
 			<div class="raid-box" id="player3-box">
-				<div class="player-name">Player 3</div>
-				<div class="health-bar">
-					<div class="health-percent" id="player3-percent">0%</div>
-					<div class="health-fill" id="player3-health"></div>
-				</div>
+				<div class="player-name" id="player3-name">Devlish</div>
+				<div class="health-percent" id="player3-percent">0%</div>
+				<div class="health-overlay" id="player3-health"></div>
+				<img id="health-bar3" class="health-bar" src="" alt="Player 3 Health Bar" />
 			</div>
 
 			<div class="raid-box" id="player4-box">
-				<div class="player-name">Player 4</div>
-				<div class="health-bar">
-					<div class="health-percent" id="player4-percent">0%</div>
-					<div class="health-fill" id="player4-health"></div>
-				</div>
+				<div class="player-name" id="player4-name">Forgotten shaw</div>
+				<div class="health-percent" id="player4-percent">0%</div>
+				<div class="health-overlay" id="player4-health"></div>
+				<img id="health-bar4" class="health-bar" src="" alt="Player 4 Health Bar" />
 			</div>
 
 			<div class="raid-box" id="player5-box">
-				<div class="player-name">Player 5</div>
-				<div class="health-bar">
-					<div class="health-percent" id="player5-percent">0%</div>
-					<div class="health-fill" id="player5-health"></div>
-				</div>
+				<div class="player-name" id="player5-name">Slabface</div>
+				<div class="health-percent" id="player5-percent">0%</div>
+				<div class="health-overlay" id="player5-health"></div>
+				<img id="health-bar5" class="health-bar" src="" alt="Player 5 Health Bar" />
 			</div>
 		</div>
 	</body>
 	<script src="../renderer.js"></script>
 </html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Raid Health Bars</title>
+		<style>
+			.health-bar {
+				width: 191px;
+				height: 10px;
+				margin: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<img id="health-bar1" class="health-bar" src="" alt="Player 1 Health Bar" />
+		<img id="health-bar2" class="health-bar" src="" alt="Player 2 Health Bar" />
+		<img id="health-bar3" class="health-bar" src="" alt="Player 3 Health Bar" />
+		<img id="health-bar4" class="health-bar" src="" alt="Player 4 Health Bar" />
+		<img id="health-bar5" class="health-bar" src="" alt="Player 5 Health Bar" />
+		<script src="renderer.js"></script>
+	</body>
+</html> -->
