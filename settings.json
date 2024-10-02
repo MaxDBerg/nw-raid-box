@@ -1,0 +1,14 @@
+{
+    "player_names": {
+        "player1": "Bjorn Trond",
+        "player2": "Rover DogMan",
+        "player3": "Devlish",
+        "player4": "Kylameez",
+        "player5": "Sir Robert Plant"
+    },
+    "use_number_parsing": true,
+    "use_data_filters": false,
+    "use_health_bar_filters": false,
+    "border_red_when_dead": false,
+    "focus_on_players": false
+}

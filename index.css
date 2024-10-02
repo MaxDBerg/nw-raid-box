@@ -16,15 +16,60 @@ body {
 	z-index: 2;
 }
 
+#settings-window {
+	min-height: 15vh;
+	position: absolute;
+	padding: 8px;
+	top: calc(100vh / 2);
+	left: calc(100vw / 2);
+	transform: translate(-50%, -50%);
+	display: flex;
+	flex-direction: column;
+	z-index: 2;
+	background-color: #333;
+	font-size: 16px;
+	font-family: monospace;
+	color: white;
+	box-shadow: 0 0 0 10px rgba(250, 0, 0, 0.7);
+}
+
+#settings-window-selector {
+	background-color: black;
+	position: relative;
+	opacity: 70%;
+	width: 100%;
+	z-index: 3;
+	min-height: 22px;
+	cursor: move;
+	margin-bottom: 8px;
+}
+
+#update-button {
+	background-color: dimgrey;
+	border: 2px solid dimgray;
+	width: fit-content;
+	cursor: pointer;
+}
+
+.settings-inputs {
+	z-index: 10;
+	cursor: pointer;
+}
+
+#update-button:hover {
+	border: 2px solid white;
+}
+
 .raid-box {
 	display: flex;
-	opacity: 90%;
+	opacity: 100%;
 	position: relative;
 	align-items: center;
 	background-color: #333;
 	border-bottom: 2px solid black;
 	border-right: 2px solid black;
 	border-left: 2px solid black;
+	opacity: 90%;
 	width: 150px;
 }
 
@@ -71,30 +116,33 @@ body {
 	text-shadow: 2px 2px 5px black;
 }
 
-/* .health-overlay {
+.health-overlay {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: 0.1;
+	opacity: 0.3;
 }
 
 #player1-health {
-	background-color: #49e0a6;
+	/* background-color: #49e0a6; */
+	background-color: purple;
 }
-#player2-health {
+/* #player2-health {
 	background-color: #f7d674;
-}
-#player3-health {
-	background-color: #a973e8;
-}
-#player4-health {
-	background-color: #f68812;
-}
-#player5-health {
-	background-color: #d555b5;
 } */
+#player3-health {
+	/* background-color: #a973e8; */
+	background-color: green;
+}
+/* #player4-health {
+	background-color: #f68812;
+} */
+#player5-health {
+	/* background-color: #d555b5; */
+	background-color: purple;
+}
 
 #raid-container-selector {
 	position: absolute;

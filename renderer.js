@@ -1,5 +1,6 @@
 // Make the DIV element draggable:
 dragElement(document.getElementById("raid-container"));
+dragElement(document.getElementById("settings-window"));
 
 function dragElement(elmnt) {
 	var pos1 = 0,

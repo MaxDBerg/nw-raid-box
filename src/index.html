@@ -13,41 +13,79 @@
 	</head>
 	<body class="not-visible">
 		<div id="editModeToggleElement"></div>
+		<div id="settings-window" class="not-visible">
+			<div id="settings-window-selector"></div>
+			<form id="settings-form">
+				<label>Player Names:</label>
+				<br />
+				<input type="text" id="player1-input-name" class="settings-inputs" />
+				<br />
+				<input type="text" id="player2-input-name" class="settings-inputs" />
+				<br />
+				<input type="text" id="player3-input-name" class="settings-inputs" />
+				<br />
+				<input type="text" id="player4-input-name" class="settings-inputs" />
+				<br />
+				<input type="text" id="player5-input-name" class="settings-inputs" />
+				<br />
+				<label>
+					<input type="checkbox" id="use-number-parsing" class="settings-inputs" />
+					Use Number Parsing </label
+				><br />
+				<label>
+					<input type="checkbox" id="use-data-filters" class="settings-inputs" />
+					Use data filters for less data noise </label
+				><br />
+				<label>
+					<input type="checkbox" id="use-health-bar-filters" class="settings-inputs" />
+					Use filters too change the color of the health bars</label
+				><br />
+				<label>
+					<input type="checkbox" disabled id="border-red-when-dead" class="settings-inputs" />
+					Set Border to Red When Player is Dead </label
+				><br />
+				<label>
+					<input type="checkbox" disabled id="focus-on-players" class="settings-inputs" />
+					Focus on Players </label
+				><br />
+				<div id="update-button" class="settings-inputs">Save</div>
+			</form>
+		</div>
 		<div id="editModeBlur" class="not-visible"></div>
 		<div id="raid-container">
 			<div id="raid-container-selector" class="not-visible"></div>
 			<div class="raid-box" id="player1-box">
 				<div class="player-name" id="player1-name">Bjorn Trond</div>
-				<div class="health-percent" id="player1-percent">0%</div>
-				<div class="health-overlay" id="player1-health"></div>
+				<div class="health-percent not-visible" id="player1-percent">0%</div>
+				<div class="health-overlay not-visible" id="player1-health"></div>
 				<img id="health-bar1" class="health-bar" src="" alt="Player 1 Health Bar" />
 			</div>
 
 			<div class="raid-box" id="player2-box">
-				<div class="player-name" id="player2-name">keepzao</div>
-				<div class="health-percent" id="player2-percent">0%</div>
-				<div class="health-overlay" id="player2-health"></div>
+				<div class="player-name" id="player2-name">Player 2</div>
+				<div class="health-percent not-visible" id="player2-percent">0%</div>
+				<div class="health-overlay not-visible" id="player2-health"></div>
 				<img id="health-bar2" class="health-bar" src="" alt="Player 2 Health Bar" />
 			</div>
 
 			<div class="raid-box" id="player3-box">
-				<div class="player-name" id="player3-name">Devlish</div>
-				<div class="health-percent" id="player3-percent">0%</div>
-				<div class="health-overlay" id="player3-health"></div>
+				<div class="player-name" id="player3-name">Player 3</div>
+				<div class="health-percent not-visible" id="player3-percent">0%</div>
+				<div class="health-overlay not-visible" id="player3-health"></div>
 				<img id="health-bar3" class="health-bar" src="" alt="Player 3 Health Bar" />
 			</div>
 
 			<div class="raid-box" id="player4-box">
-				<div class="player-name" id="player4-name">Forgotten shaw</div>
-				<div class="health-percent" id="player4-percent">0%</div>
-				<div class="health-overlay" id="player4-health"></div>
+				<div class="player-name" id="player4-name">Player 4</div>
+				<div class="health-percent not-visible" id="player4-percent">0%</div>
+				<div class="health-overlay not-visible" id="player4-health"></div>
 				<img id="health-bar4" class="health-bar" src="" alt="Player 4 Health Bar" />
 			</div>
 
 			<div class="raid-box" id="player5-box">
-				<div class="player-name" id="player5-name">Slabface</div>
-				<div class="health-percent" id="player5-percent">0%</div>
-				<div class="health-overlay" id="player5-health"></div>
+				<div class="player-name" id="player5-name">Player 5</div>
+				<div class="health-percent not-visible" id="player5-percent">0%</div>
+				<div class="health-overlay not-visible" id="player5-health"></div>
 				<img id="health-bar5" class="health-bar" src="" alt="Player 5 Health Bar" />
 			</div>
 		</div>
