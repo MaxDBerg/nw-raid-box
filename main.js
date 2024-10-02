@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { activeWindow } from "get-windows";
 import zmq from "zeromq";
+import fs from "node:fs";
 
 let win;
 let gameActive = false;
@@ -61,8 +62,28 @@ ipcMain.on("set-ignore-mouse-events", (event, ignore, options) => {
 	win.setIgnoreMouseEvents(ignore, options);
 });
 
+ipcMain.on("send-settings-to-raid-parser", (event, newSettings) => {
+	const win = BrowserWindow.fromWebContents(event.sender);
+	uploadSettings(newSettings);
+	win.webContents.send("overlay-settings", newSettings);
+	handleZMQCommand([
+		JSON.stringify({
+			type: "settings",
+			data: newSettings,
+		}),
+	]);
+});
+
 app.whenReady().then(() => {
 	win = createWindow();
+	const settings = loadSettings();
+	win.webContents.send("init-settings", settings);
+	handleZMQCommand([
+		JSON.stringify({
+			type: "settings",
+			data: settings,
+		}),
+	]);
 	checkGameStatusLoop();
 	dataListeningLoop();
 });
@@ -77,7 +98,12 @@ async function checkGameStatusLoop() {
 					gameActive = true;
 					win.webContents.send("is-game", true);
 					console.log("Game is active. Starting data reception...");
-					await handleZMQCommand(["start"]);
+					await handleZMQCommand([
+						JSON.stringify({
+							type: "run-state",
+							data: "start",
+						}),
+					]);
 					receivingData = true;
 				}
 			} else {
@@ -85,7 +111,12 @@ async function checkGameStatusLoop() {
 					gameActive = false;
 					win.webContents.send("is-game", false);
 					console.log("Game is not active. Stopping data reception...");
-					await handleZMQCommand(["stop"]);
+					await handleZMQCommand([
+						JSON.stringify({
+							type: "run-state",
+							data: "stop",
+						}),
+					]);
 					receivingData = false;
 				}
 			}
@@ -96,14 +127,24 @@ async function checkGameStatusLoop() {
 	}, 1000);
 }
 
+function loadSettings() {
+	console.log(__dirname);
+	const settingsFilePath = path.join(__dirname, "settings.json");
+	const data = fs.readFileSync(settingsFilePath, "utf8");
+	return JSON.parse(data);
+}
+
+function uploadSettings(newSettings) {
+	const settingsFilePath = path.join(__dirname, "settings.json");
+	fs.writeFileSync(settingsFilePath, JSON.stringify(newSettings, null, 4), "utf8");
+}
+
 async function dataListeningLoop() {
 	setInterval(async () => {
 		if (receivingData) {
 			try {
 				const [message] = await dataSocket.receive();
-				console.log("Received data from Python:", [...message]);
-
-				win.webContents.send("parser-data", [...message]);
+				win.webContents.send("python-data", message);
 			} catch (error) {
 				try {
 					dataSocket.close();
@@ -125,7 +166,7 @@ const handleZMQCommand = async (command) => {
 		console.log(`Received: ${result}`);
 		return result;
 	} catch (error) {
-		console.error(`Failed to send ZMQ command '${command}'!`);
+		console.error(`Failed to send ZMQ command '${command}'!` + error);
 
 		try {
 			commandSocket.close();
